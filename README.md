@@ -135,8 +135,8 @@ docker compose -f docker-compose.dev.yml up --build
 - [x] **Phase 2**: Real-time collaboration & Workspaces
 - [x] **Phase 3**: Analytics Dashboard & Dark Mode
 - [ ] **Phase 4**: OAuth2 (Google/GitHub) Integration
-- [ ] **Phase 5**: Mobile App (React Native)
-- [ ] **Phase 6**: AI Task Prioritization
+- [ ] **Phase 5**: AI Task Prioritization
+- [ ] **Phase 6**: IPhone App (Swift)
 
 ---
 
