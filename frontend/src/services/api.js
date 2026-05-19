@@ -4,7 +4,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 const api = axios.create({
     baseURL: API_URL,
-    withCredentials: true, 
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -67,7 +67,7 @@ api.interceptors.response.use(
 
                 const newAccessToken = data.data.accessToken;
                 localStorage.setItem('accessToken', newAccessToken);
-                
+
                 processQueue(null, newAccessToken);
 
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
