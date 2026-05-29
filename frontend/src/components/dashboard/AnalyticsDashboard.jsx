@@ -1,241 +1,266 @@
 import React, { useState, useEffect } from 'react';
-import { PieChart, Pie, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
-import { CheckCircle2, Clock, AlertTriangle, Activity } from 'lucide-react';
+import {
+  PieChart, Pie, Cell, Tooltip as RechartsTooltip,
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend,
+} from 'recharts';
+import { CheckCircle2, Clock, AlertTriangle, Activity, Inbox } from 'lucide-react';
 import { taskApi } from '../../services/taskApi';
 import { useAuth } from '../../context/AuthContext';
-import gsap from 'gsap';
-
-const S = {
-    container: {
-        marginTop: '64px',
-        paddingTop: '32px',
-        borderTop: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex', flexDirection: 'column', gap: '32px'
-    },
-    headerRow: {
-        display: 'flex', alignItems: 'center', gap: '12px',
-        marginBottom: '16px'
-    },
-    title: {
-        fontSize: '24px', fontWeight: 700, color: '#F0F4FF', margin: 0,
-        fontFamily: "'Syne', sans-serif",
-    },
-    statsGrid: {
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px'
-    },
-    statCard: {
-        background: 'rgba(255,255,255,0.035)', border: '1px solid rgba(255,255,255,0.07)',
-        borderRadius: '20px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '12px',
-        backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)'
-    },
-    statTop: {
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-    },
-    statTitle: {
-        fontSize: '13px', color: 'rgba(160,170,200,0.65)', fontWeight: 600,
-        textTransform: 'uppercase', letterSpacing: '0.05em'
-    },
-    statNum: {
-        fontSize: '32px', fontWeight: 700, color: '#F0F4FF', margin: 0,
-        fontFamily: "'Syne', sans-serif", lineHeight: 1
-    },
-    chartsGrid: {
-        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px',
-        marginTop: '16px'
-    },
-    chartCard: {
-        background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
-        borderRadius: '20px', padding: '24px', height: '320px',
-        display: 'flex', flexDirection: 'column'
-    },
-    chartTitle: {
-        fontSize: '16px', fontWeight: 600, color: '#F0F4FF', margin: '0 0 20px'
-    },
-    taskList: {
-        background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)',
-        borderRadius: '20px', padding: '24px', marginTop: '16px'
-    },
-    taskItem: {
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: '14px',
-        marginBottom: '12px'
-    },
-    taskLeft: {
-        display: 'flex', alignItems: 'center', gap: '16px'
-    },
-    taskProject: {
-        fontSize: '11px', padding: '4px 10px', borderRadius: '6px',
-        background: 'rgba(255,255,255,0.1)', color: '#F0F4FF', fontWeight: 600
-    },
-    taskName: {
-        fontSize: '15px', fontWeight: 500, color: '#F0F4FF'
-    },
-    taskRight: {
-        display: 'flex', alignItems: 'center', gap: '16px'
-    },
-    taskDate: {
-        fontSize: '13px', color: 'rgba(160,170,200,0.6)'
-    }
-};
+import { useTheme } from '../../context/ThemeContext';
 
 const STATUS_COLORS = {
-    'todo': '#0EA5E9',
-    'in_progress': '#F59E0B',
-    'review': '#8B5CF6',
-    'done': '#10B981',
-    'backlog': '#6B7280'
+  todo: '#0EA5E9',
+  in_progress: '#F59E0B',
+  review: '#8B5CF6',
+  done: '#10B981',
+  backlog: '#6B7280',
+};
+const STATUS_LABELS = {
+  todo: 'Todo',
+  in_progress: 'In Progress',
+  review: 'Review',
+  done: 'Done',
+  backlog: 'Backlog',
+};
+const PRIORITY_COLORS = {
+  low: '#10B981',
+  medium: '#F59E0B',
+  high: '#F97316',
+  urgent: '#EF4444',
 };
 
-const PRIORITY_COLORS = {
-    'low': '#10B981',
-    'medium': '#F59E0B',
-    'high': '#F97316',
-    'urgent': '#EF4444'
-};
+const EmptyChart = ({ label, isLight }) => (
+  <div style={{
+    flex: 1, display: 'flex', flexDirection: 'column',
+    alignItems: 'center', justifyContent: 'center', gap: 8,
+    color: isLight ? '#9CA3AF' : 'rgba(160,170,200,0.45)',
+  }}>
+    <Inbox size={28} strokeWidth={1.5} />
+    <span style={{ fontSize: 13 }}>No {label} data yet</span>
+  </div>
+);
 
 const AnalyticsDashboard = () => {
-    const { user } = useAuth();
-    const [tasks, setTasks] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
 
-    useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const res = await taskApi.getMyTasks();
-                setTasks(res.data || []);
-            } catch (err) {
-                console.error("Failed to load user tasks");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchTasks();
-    }, []);
+  const [tasks, setTasks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    if (loading) return null;
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const res = await taskApi.getMyTasks();
+        setTasks(Array.isArray(res?.data) ? res.data : []);
+      } catch (err) {
+        console.error('Failed to load user tasks', err);
+        setError('Could not load tasks.');
+        setTasks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTasks();
+  }, []);
 
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    const nextWeek = new Date(today);
-    nextWeek.setDate(nextWeek.getDate() + 7);
+  /* Theme-aware chart colors */
+  const axisColor = isLight ? '#9CA3AF' : 'rgba(160,170,200,0.4)';
+  const gridColor = isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)';
+  const tooltipBg = isLight ? '#FFFFFF' : '#0F172A';
+  const tooltipBorder = isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.1)';
+  const tooltipText = isLight ? '#1A1A2E' : '#F0F4FF';
+  const cardStyle = {
+    background: 'var(--bg-card)',
+    border: '1px solid var(--border-primary)',
+    borderRadius: 20,
+    padding: 24,
+    boxShadow: 'var(--shadow-card)',
+  };
 
-    // Compute stats
-    let dueToday = 0, dueThisWeek = 0, overdue = 0;
-    
-    const statusDataMap = { 'todo':0, 'in_progress':0, 'review':0, 'done':0, 'backlog':0 };
-    const priorityDataMap = { 'low':0, 'medium':0, 'high':0, 'urgent':0 };
+  if (loading) return (
+    <div style={{ marginTop: 64, paddingTop: 32, borderTop: '1px solid var(--border-primary)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
+        {[0, 1, 2, 3].map(i => (
+          <div key={i} style={{ ...cardStyle, height: 100, opacity: 0.5 }} />
+        ))}
+      </div>
+    </div>
+  );
 
-    tasks.forEach(t => {
-        statusDataMap[t.status] = (statusDataMap[t.status] || 0) + 1;
-        priorityDataMap[t.priority] = (priorityDataMap[t.priority] || 0) + 1;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const nextWeek = new Date(today);
+  nextWeek.setDate(nextWeek.getDate() + 7);
 
-        if (t.dueDate && t.status !== 'done') {
-            const date = new Date(t.dueDate);
-            date.setHours(0,0,0,0);
-            if (date < today) overdue++;
-            else if (date.getTime() === today.getTime()) dueToday++;
-            else if (date < nextWeek) dueThisWeek++;
-        }
-    });
+  let dueToday = 0, dueThisWeek = 0, overdue = 0;
+  const statusMap = { todo: 0, in_progress: 0, review: 0, done: 0, backlog: 0 };
+  const priorityMap = { low: 0, medium: 0, high: 0, urgent: 0 };
 
-    const statusData = Object.entries(statusDataMap).filter(([_,v])=>v>0).map(([k,v]) => ({ name: k, value: v }));
-    const priorityData = Object.entries(priorityDataMap).filter(([_,v])=>v>0).map(([k,v]) => ({ name: k, value: v }));
+  tasks.forEach(t => {
+    if (statusMap[t.status] !== undefined) statusMap[t.status]++;
+    if (priorityMap[t.priority] !== undefined) priorityMap[t.priority]++;
+    if (t.dueDate && t.status !== 'done') {
+      const d = new Date(t.dueDate);
+      d.setHours(0, 0, 0, 0);
+      if (d < today) overdue++;
+      else if (d.getTime() === today.getTime()) dueToday++;
+      else if (d < nextWeek) dueThisWeek++;
+    }
+  });
 
-    const upcomingTasks = tasks.filter(t => t.status !== 'done').slice(0, 5);
+  const statusData = Object.entries(statusMap)
+    .filter(([, v]) => v > 0)
+    .map(([k, v]) => ({ name: STATUS_LABELS[k] || k, key: k, value: v }));
 
-    return (
-        <div style={S.container}>
-            <div style={S.headerRow}>
-                <Activity size={24} color="#0EA5E9" />
-                <h2 style={S.title}>Your Overview</h2>
+  const priorityData = Object.entries(priorityMap)
+    .filter(([, v]) => v > 0)
+    .map(([k, v]) => ({ name: k.charAt(0).toUpperCase() + k.slice(1), key: k, value: v }));
+
+  const upcomingTasks = tasks.filter(t => t.status !== 'done').slice(0, 5);
+  const remaining = tasks.filter(t => t.status !== 'done').length;
+
+  const stats = [
+    { label: 'Tasks Remaining', value: remaining, icon: <CheckCircle2 size={18} color="#0EA5E9" /> },
+    { label: 'Due Today', value: dueToday, icon: <Clock size={18} color="#F59E0B" /> },
+    { label: 'Due This Week', value: dueThisWeek, icon: <Clock size={18} color="#8B5CF6" /> },
+    { label: 'Overdue', value: overdue, icon: <AlertTriangle size={18} color="#EF4444" /> },
+  ];
+
+  return (
+    <div style={{ marginTop: 64, paddingTop: 32, borderTop: '1px solid var(--border-primary)', display: 'flex', flexDirection: 'column', gap: 32 }}>
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <Activity size={22} color="#0EA5E9" />
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', margin: 0, fontFamily: "'Syne', sans-serif" }}>
+          Your Overview
+        </h2>
+        {error && <span style={{ fontSize: 12, color: 'var(--text-danger)', marginLeft: 8 }}>{error}</span>}
+      </div>
+
+      {/* Stat cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+        {stats.map((s, i) => (
+          <div key={i} style={cardStyle}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+              <span style={{ fontSize: 12, color: 'var(--text-secondary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {s.label}
+              </span>
+              {s.icon}
             </div>
-
-            <div style={S.statsGrid}>
-                <div style={S.statCard}>
-                    <div style={S.statTop}>
-                        <span style={S.statTitle}>Tasks Remaining</span>
-                        <CheckCircle2 size={18} color="#0EA5E9" />
-                    </div>
-                    <h3 style={S.statNum}>{tasks.filter(t=>t.status!=='done').length}</h3>
-                </div>
-                <div style={S.statCard}>
-                    <div style={S.statTop}>
-                        <span style={S.statTitle}>Due Today</span>
-                        <Clock size={18} color="#F59E0B" />
-                    </div>
-                    <h3 style={S.statNum}>{dueToday}</h3>
-                </div>
-                <div style={S.statCard}>
-                    <div style={S.statTop}>
-                        <span style={S.statTitle}>Due This Week</span>
-                        <Clock size={18} color="#8B5CF6" />
-                    </div>
-                    <h3 style={S.statNum}>{dueThisWeek}</h3>
-                </div>
-                <div style={S.statCard}>
-                    <div style={S.statTop}>
-                        <span style={S.statTitle}>Overdue</span>
-                        <AlertTriangle size={18} color="#EF4444" />
-                    </div>
-                    <h3 style={S.statNum}>{overdue}</h3>
-                </div>
+            <div style={{ fontSize: 36, fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1, fontFamily: "'Syne', sans-serif" }}>
+              {s.value}
             </div>
+          </div>
+        ))}
+      </div>
 
-            <div style={S.chartsGrid}>
-                <div style={S.chartCard}>
-                    <h4 style={S.chartTitle}>Tasks by Status</h4>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                            <Pie data={statusData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
-                                {statusData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.name]} />
-                                ))}
-                            </Pie>
-                            <RechartsTooltip contentStyle={{ background: '#0F172A', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} itemStyle={{ color: '#F0F4FF' }} />
-                        </PieChart>
-                    </ResponsiveContainer>
-                </div>
-
-                <div style={S.chartCard}>
-                    <h4 style={S.chartTitle}>Tasks by Priority</h4>
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={priorityData} margin={{ top: 20, right: 30, left: -20, bottom: 5 }}>
-                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
-                            <XAxis dataKey="name" stroke="rgba(255,255,255,0.4)" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                            <YAxis stroke="rgba(255,255,255,0.4)" tick={{ fill: 'rgba(255,255,255,0.4)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                            <RechartsTooltip cursor={{ fill: 'rgba(255,255,255,0.05)' }} contentStyle={{ background: '#0F172A', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }} />
-                            <Bar dataKey="value" radius={[6, 6, 0, 0]}>
-                                {priorityData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={PRIORITY_COLORS[entry.name]} />
-                                ))}
-                            </Bar>
-                        </BarChart>
-                    </ResponsiveContainer>
-                </div>
-            </div>
-
-            {upcomingTasks.length > 0 && (
-                <div style={S.taskList}>
-                    <h4 style={S.chartTitle}>Upcoming Tasks</h4>
-                    <div>
-                        {upcomingTasks.map(t => (
-                            <div key={t._id} style={S.taskItem}>
-                                <div style={S.taskLeft}>
-                                    <span style={{ ...S.taskProject, background: t.project?.color ? `${t.project.color}33` : 'rgba(255,255,255,0.1)', color: t.project?.color || '#F0F4FF' }}>
-                                        {t.project?.name || 'Unknown'}
-                                    </span>
-                                    <span style={S.taskName}>{t.title}</span>
-                                </div>
-                                <div style={S.taskRight}>
-                                    {t.dueDate && <span style={S.taskDate}>{new Date(t.dueDate).toLocaleDateString()}</span>}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
+      {/* Charts */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: 20 }}>
+        {/* Tasks by Status */}
+        <div style={{ ...cardStyle, height: 300, display: 'flex', flexDirection: 'column' }}>
+          <h4 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 16px' }}>Tasks by Status</h4>
+          {statusData.length === 0 ? (
+            <EmptyChart label="status" isLight={isLight} />
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={statusData}
+                  cx="50%" cy="50%"
+                  innerRadius={55} outerRadius={80}
+                  paddingAngle={4} dataKey="value"
+                >
+                  {statusData.map((entry, index) => (
+                    <Cell key={index} fill={STATUS_COLORS[entry.key]} />
+                  ))}
+                </Pie>
+                <RechartsTooltip
+                  contentStyle={{ background: tooltipBg, border: `1px solid ${tooltipBorder}`, borderRadius: 12, boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}
+                  itemStyle={{ color: tooltipText, fontSize: 13 }}
+                  labelStyle={{ color: tooltipText }}
+                />
+                <Legend
+                  iconType="circle"
+                  iconSize={8}
+                  wrapperStyle={{ fontSize: 12, color: axisColor }}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
         </div>
-    );
+
+        {/* Tasks by Priority */}
+        <div style={{ ...cardStyle, height: 300, display: 'flex', flexDirection: 'column' }}>
+          <h4 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 16px' }}>Tasks by Priority</h4>
+          {priorityData.length === 0 ? (
+            <EmptyChart label="priority" isLight={isLight} />
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={priorityData} margin={{ top: 8, right: 16, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fill: axisColor, fontSize: 12 }}
+                  axisLine={false} tickLine={false}
+                />
+                <YAxis
+                  tick={{ fill: axisColor, fontSize: 12 }}
+                  axisLine={false} tickLine={false}
+                  allowDecimals={false}
+                />
+                <RechartsTooltip
+                  cursor={{ fill: isLight ? 'rgba(0,0,0,0.04)' : 'rgba(255,255,255,0.04)' }}
+                  contentStyle={{ background: tooltipBg, border: `1px solid ${tooltipBorder}`, borderRadius: 12 }}
+                  itemStyle={{ color: tooltipText, fontSize: 13 }}
+                />
+                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                  {priorityData.map((entry, index) => (
+                    <Cell key={index} fill={PRIORITY_COLORS[entry.key]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </div>
+      </div>
+
+      {/* Upcoming tasks list */}
+      {upcomingTasks.length > 0 && (
+        <div style={cardStyle}>
+          <h4 style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 16px' }}>Upcoming Tasks</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {upcomingTasks.map(t => (
+              <div key={t._id} style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '12px 14px',
+                background: 'var(--bg-input)',
+                borderRadius: 12,
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <span style={{
+                    fontSize: 11, padding: '3px 8px', borderRadius: 6,
+                    background: t.project?.color ? `${t.project.color}22` : 'var(--bg-input)',
+                    color: t.project?.color || 'var(--text-muted)',
+                    fontWeight: 600, border: `1px solid ${t.project?.color ? `${t.project.color}44` : 'var(--border-primary)'}`,
+                  }}>
+                    {t.project?.name || 'No project'}
+                  </span>
+                  <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{t.title}</span>
+                </div>
+                {t.dueDate && (
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                    {new Date(t.dueDate).toLocaleDateString()}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default AnalyticsDashboard;

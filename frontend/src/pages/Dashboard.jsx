@@ -24,17 +24,18 @@ const accent = (i) => ACCENTS[i % ACCENTS.length];
 const S = {
     page: {
         minHeight: '100vh',
-        background: '#060810',
+        background: 'var(--bg-primary)',
         fontFamily: "'DM Sans', sans-serif",
         position: 'relative',
         overflow: 'hidden',
         padding: '0 0 80px',
+        transition: 'background-color 0.3s ease',
     },
     grid: {
         position: 'fixed', inset: 0,
         backgroundImage: `
-      linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)
     `,
         backgroundSize: '48px 48px',
         pointerEvents: 'none',
@@ -43,13 +44,13 @@ const S = {
     orb1: {
         position: 'fixed', top: '-10%', left: '-5%',
         width: 500, height: 500, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(56,182,255,0.12) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, var(--orb-blue) 0%, transparent 70%)',
         filter: 'blur(70px)', pointerEvents: 'none', zIndex: 0,
     },
     orb2: {
         position: 'fixed', bottom: '-15%', right: '-8%',
         width: 600, height: 600, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(120,80,255,0.10) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, var(--orb-purple) 0%, transparent 70%)',
         filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
     },
     inner: {
@@ -65,7 +66,7 @@ const S = {
         justifyContent: 'space-between',
         flexWrap: 'wrap', gap: 20,
         paddingBottom: 32,
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
+        borderBottom: '1px solid var(--border-primary)',
         marginBottom: 40,
     },
     headerLeft: { flex: 1 },
@@ -73,8 +74,8 @@ const S = {
         display: 'inline-flex', alignItems: 'center', gap: 7,
         padding: '4px 12px',
         borderRadius: 99,
-        background: 'rgba(56,182,255,0.09)',
-        border: '1px solid rgba(56,182,255,0.20)',
+        background: 'var(--bg-badge)',
+        border: '1px solid var(--border-accent)',
         marginBottom: 14,
         opacity: 0,
     },
@@ -85,26 +86,26 @@ const S = {
     },
     eyebrowText: {
         fontSize: 11, fontWeight: 600, letterSpacing: '0.08em',
-        color: '#38B6FF', textTransform: 'uppercase',
+        color: 'var(--text-accent)', textTransform: 'uppercase',
     },
     h1: {
         fontSize: 36, fontWeight: 700, lineHeight: 1.1,
-        color: '#F0F4FF', margin: 0,
+        color: 'var(--text-primary)', margin: 0,
         fontFamily: "'Syne', sans-serif",
         opacity: 0,
     },
     subtext: {
-        fontSize: 14, color: 'rgba(160,170,200,0.65)',
+        fontSize: 14, color: 'var(--text-secondary)',
         marginTop: 8, opacity: 0,
     },
     newBtn: {
         display: 'inline-flex', alignItems: 'center', gap: 8,
         padding: '12px 22px',
         borderRadius: 14, border: 'none',
-        background: 'linear-gradient(135deg, #1B6FE8 0%, #7B3FE4 100%)',
+        background: 'var(--gradient-brand)',
         color: '#fff', fontSize: 14, fontWeight: 600,
         cursor: 'pointer',
-        boxShadow: '0 8px 28px rgba(27,111,232,0.35)',
+        boxShadow: 'var(--shadow-btn)',
         fontFamily: 'inherit',
         opacity: 0,
         whiteSpace: 'nowrap',
@@ -122,14 +123,14 @@ const S = {
     statChip: {
         padding: '8px 18px',
         borderRadius: 12,
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.07)',
+        background: 'var(--bg-input)',
+        border: '1px solid var(--border-primary)',
         display: 'flex', alignItems: 'center', gap: 8,
-        fontSize: 13, color: 'rgba(180,190,220,0.7)',
+        fontSize: 13, color: 'var(--text-body)',
     },
     statNum: {
         fontWeight: 700, fontSize: 15,
-        color: '#F0F4FF',
+        color: 'var(--text-primary)',
     },
 
     /* ── Grid ── */
@@ -141,8 +142,8 @@ const S = {
 
     /* ── Workspace card ── */
     card: {
-        background: 'rgba(255,255,255,0.035)',
-        border: '1px solid rgba(255,255,255,0.07)',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-primary)',
         borderRadius: 22,
         padding: '24px 24px 20px',
         cursor: 'pointer',
@@ -150,8 +151,8 @@ const S = {
         WebkitBackdropFilter: 'blur(16px)',
         display: 'flex', flexDirection: 'column',
         position: 'relative', overflow: 'hidden',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.25)',
-        transition: 'border-color 0.2s',
+        boxShadow: 'var(--shadow-card)',
+        transition: 'border-color 0.2s, background 0.3s ease, box-shadow 0.3s ease',
         height: '100%'
     },
     cardAccentBar: {
@@ -173,27 +174,27 @@ const S = {
         display: 'flex', alignItems: 'center', gap: 5,
         padding: '4px 10px',
         borderRadius: 8,
-        background: 'rgba(255,255,255,0.06)',
-        border: '1px solid rgba(255,255,255,0.08)',
+        background: 'var(--bg-input)',
+        border: '1px solid var(--border-primary)',
         fontSize: 12, fontWeight: 500,
-        color: 'rgba(180,190,220,0.7)',
+        color: 'var(--text-body)',
     },
     cardName: {
         fontSize: 18, fontWeight: 700,
-        color: '#F0F4FF', margin: '0 0 4px',
+        color: 'var(--text-primary)', margin: '0 0 4px',
         fontFamily: "'Syne', sans-serif",
     },
     cardSlug: {
-        fontSize: 12, color: 'rgba(160,170,200,0.45)',
+        fontSize: 12, color: 'var(--text-tertiary)',
         fontFamily: 'monospace',
     },
     cardFooter: {
         display: 'flex', alignItems: 'center',
         justifyContent: 'space-between',
         marginTop: 'auto', paddingTop: 16,
-        borderTop: '1px solid rgba(255,255,255,0.055)',
+        borderTop: '1px solid var(--border-secondary)',
         fontSize: 13,
-        color: 'rgba(160,170,200,0.55)',
+        color: 'var(--text-secondary)',
     },
     openLink: {
         display: 'flex', alignItems: 'center', gap: 4,
@@ -210,8 +211,8 @@ const S = {
     skeleton: {
         height: 180,
         borderRadius: 22,
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'var(--bg-input)',
+        border: '1px solid var(--border-primary)',
         overflow: 'hidden', position: 'relative',
     },
     skeletonShimmer: {
@@ -226,8 +227,8 @@ const S = {
         alignItems: 'center', justifyContent: 'center',
         padding: '80px 24px',
         borderRadius: 28,
-        background: 'rgba(255,255,255,0.03)',
-        border: '1px dashed rgba(255,255,255,0.08)',
+        background: 'var(--bg-card)',
+        border: '1px dashed var(--border-primary)',
         textAlign: 'center',
     },
     emptyIcon: {
@@ -240,21 +241,21 @@ const S = {
     },
     emptyTitle: {
         fontSize: 20, fontWeight: 700,
-        color: '#F0F4FF', margin: '0 0 8px',
+        color: 'var(--text-primary)', margin: '0 0 8px',
         fontFamily: "'Syne', sans-serif",
     },
     emptyText: {
-        fontSize: 14, color: 'rgba(160,170,200,0.55)',
+        fontSize: 14, color: 'var(--text-secondary)',
         margin: '0 0 24px',
     },
     emptyBtn: {
         display: 'inline-flex', alignItems: 'center', gap: 7,
         padding: '11px 22px',
         borderRadius: 12, border: 'none',
-        background: 'linear-gradient(135deg, #1B6FE8 0%, #7B3FE4 100%)',
+        background: 'var(--gradient-brand)',
         color: '#fff', fontSize: 14, fontWeight: 600,
         cursor: 'pointer', fontFamily: 'inherit',
-        boxShadow: '0 8px 24px rgba(27,111,232,0.30)',
+        boxShadow: 'var(--shadow-btn)',
     },
 };
 
@@ -286,8 +287,8 @@ const WorkspaceCard = ({ workspace, index, onClick }) => {
     const onEnter = () => {
         gsap.to(cardRef.current, {
             y: -5,
-            background: 'rgba(255,255,255,0.055)',
-            borderColor: 'rgba(255,255,255,0.12)',
+            background: 'var(--bg-card-hover)',
+            borderColor: 'var(--hover-card-border)',
             boxShadow: `0 12px 40px ${ac.glow}`,
             duration: 0.25,
         });
@@ -295,9 +296,9 @@ const WorkspaceCard = ({ workspace, index, onClick }) => {
     const onLeave = () => {
         gsap.to(cardRef.current, {
             y: 0,
-            background: 'rgba(255,255,255,0.035)',
-            borderColor: 'rgba(255,255,255,0.07)',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.25)',
+            background: 'var(--bg-card)',
+            borderColor: 'var(--border-primary)',
+            boxShadow: 'var(--shadow-card)',
             duration: 0.25,
         });
     };
@@ -314,11 +315,6 @@ const WorkspaceCard = ({ workspace, index, onClick }) => {
             onMouseDown={onDown}
             onMouseUp={onUp}
         >
-            {/* Top accent line */}
-            <div style={{
-                ...S.cardAccentBar,
-                background: `linear-gradient(90deg, ${ac.from}, ${ac.to})`,
-            }} />
 
             <div style={S.cardTop}>
                 <div style={{
