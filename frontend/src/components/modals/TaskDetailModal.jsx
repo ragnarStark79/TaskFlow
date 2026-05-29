@@ -21,21 +21,29 @@ import {
 } from "lucide-react";
 import { taskApi } from "../../services/taskApi";
 import { useAuth } from "../../context/AuthContext";
+import { useTheme } from "../../context/ThemeContext";
 import ActivityTimeline from "../task/ActivityTimeline";
 import FileUploadZone from "../task/FileUploadZone";
 import toast from "react-hot-toast";
 import gsap from "gsap";
 
-/* ── Design tokens ── */
-const T = {
-  bg: "#0C0F1C",
-  surface: "#111520",
-  border: "rgba(255,255,255,0.07)",
-  borderMd: "rgba(255,255,255,0.10)",
-  text: "#E2E8F0",
-  muted: "#64748B",
-  subtle: "#1E2436",
-};
+/* ── Design tokens (theme-aware) ── */
+const getTokens = (isLight) => ({
+  bg:      isLight ? '#FFFFFF'                    : '#0C0F1C',
+  bgTop:   isLight ? 'rgba(255,255,255,0.96)'     : 'rgba(12,15,28,0.96)',
+  surface: isLight ? '#F7F8FA'                    : '#111520',
+  border:  isLight ? 'rgba(0,0,0,0.08)'           : 'rgba(255,255,255,0.07)',
+  borderMd:isLight ? 'rgba(0,0,0,0.12)'           : 'rgba(255,255,255,0.10)',
+  text:    isLight ? '#111827'                    : '#E2E8F0',
+  muted:   isLight ? '#6B7280'                    : '#64748B',
+  subtle:  isLight ? '#F3F4F6'                    : '#1E2436',
+  input:   isLight ? '#F3F4F6'                    : 'rgba(255,255,255,0.04)',
+  inputBdr:isLight ? 'rgba(0,0,0,0.10)'           : 'rgba(255,255,255,0.07)',
+  label:   isLight ? '#374151'                    : '#94A3B8',
+  shadow:  isLight
+    ? '0 20px 60px rgba(0,0,0,0.12), -4px 0 20px rgba(0,0,0,0.04)'
+    : '-20px 0 80px rgba(0,0,0,0.6)',
+});
 
 const STATUS_CONFIG = {
   backlog: { color: "#475569", label: "Backlog" },
@@ -84,44 +92,44 @@ const LABEL_COLORS = [
   "#F97316",
 ];
 
-/* ── Modal CSS ── */
+/* ── Modal CSS (theme-aware via data-theme) ── */
 const MODAL_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
 
   .tdm * { box-sizing: border-box; }
   .tdm-scroll::-webkit-scrollbar { width: 4px; }
   .tdm-scroll::-webkit-scrollbar-track { background: transparent; }
-  .tdm-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+  .tdm-scroll::-webkit-scrollbar-thumb { background: var(--border-primary); border-radius: 4px; }
 
   .tdm-input {
     width: 100%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: var(--bg-input);
+    border: 1px solid var(--border-primary);
     border-radius: 10px;
     padding: 10px 14px;
-    color: #E2E8F0;
+    color: var(--text-primary);
     font-size: 13px;
     font-family: 'Outfit', sans-serif;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
     resize: none;
   }
-  .tdm-input::placeholder { color: #334155; }
+  .tdm-input::placeholder { color: var(--text-muted); }
   .tdm-input:focus {
-    border-color: rgba(59,130,246,0.4);
-    box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
+    border-color: rgba(59,130,246,0.5);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.10);
   }
 
   .tdm-tab-btn {
     flex: 1; display: flex; align-items: center; justify-content: center;
-    gap: 6px; padding: 7px 12px; border-radius: 8px; border: none;
+    gap: 6px; padding: 8px 12px; border-radius: 9px; border: none;
     font-size: 12px; font-weight: 600; cursor: pointer;
     background: transparent; transition: all 0.15s;
     font-family: 'Outfit', sans-serif;
+    color: var(--text-secondary);
   }
-  .tdm-tab-btn.active { background: rgba(59,130,246,0.15); color: #60A5FA; }
-  .tdm-tab-btn:not(.active) { color: #475569; }
-  .tdm-tab-btn:not(.active):hover { color: #94A3B8; background: rgba(255,255,255,0.04); }
+  .tdm-tab-btn.active { background: rgba(59,130,246,0.12); color: #3B82F6; }
+  .tdm-tab-btn:not(.active):hover { background: var(--bg-input); color: var(--text-primary); }
 
   .tdm-status-pill {
     display: inline-flex; align-items: center; gap: 5px;
@@ -133,8 +141,8 @@ const MODAL_CSS = `
   }
 
   .tdm-priority-btn {
-    padding: 4px 12px; border-radius: 8px;
-    font-size: 11px; font-weight: 700; cursor: pointer;
+    padding: 5px 14px; border-radius: 8px;
+    font-size: 12px; font-weight: 700; cursor: pointer;
     border: 1px solid; transition: all 0.15s;
     font-family: 'Outfit', sans-serif;
   }
@@ -142,22 +150,23 @@ const MODAL_CSS = `
   .tdm-section-label {
     font-size: 10px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.10em;
-    color: #334155; font-family: 'Outfit', sans-serif;
+    color: var(--text-muted); font-family: 'Outfit', sans-serif;
+    display: flex; align-items: center; gap: 6px;
   }
 
   .tdm-row-btn {
     width: 100%; display: flex; align-items: center; gap: 10px;
-    padding: 8px 10px; border-radius: 10px; border: none;
+    padding: 9px 12px; border-radius: 10px; border: none;
     background: transparent; cursor: pointer; text-align: left;
-    transition: background 0.15s; color: #94A3B8;
+    transition: background 0.15s; color: var(--text-secondary);
     font-family: 'Outfit', sans-serif; font-size: 13px;
   }
-  .tdm-row-btn:hover { background: rgba(255,255,255,0.04); }
+  .tdm-row-btn:hover { background: var(--bg-input); }
 
   .tdm-divider {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
-    margin: 4px 0;
+    background: var(--border-primary);
+    margin: 8px 0;
   }
 
   .tdm-send-btn {
@@ -167,38 +176,38 @@ const MODAL_CSS = `
     display: flex; align-items: center; gap: 6px;
     transition: opacity 0.15s, transform 0.1s;
     font-family: 'Outfit', sans-serif; white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.25);
   }
   .tdm-send-btn:hover:not(:disabled) { opacity: 0.88; transform: scale(1.02); }
   .tdm-send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
   .tdm-delete-btn {
-    width: 32px; height: 32px; border-radius: 9px; border: none;
-    background: transparent; color: #475569; cursor: pointer;
+    width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--border-primary);
+    background: transparent; color: var(--text-muted); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: background 0.15s, color 0.15s;
   }
-  .tdm-delete-btn:hover { background: rgba(239,68,68,0.10); color: #EF4444; }
+  .tdm-delete-btn:hover { background: rgba(239,68,68,0.10); color: #EF4444; border-color: rgba(239,68,68,0.2); }
 
   .tdm-close-btn {
-    width: 32px; height: 32px; border-radius: 9px; border: none;
-    background: rgba(255,255,255,0.05); color: #64748B; cursor: pointer;
+    width: 32px; height: 32px; border-radius: 9px; border: 1px solid var(--border-primary);
+    background: var(--bg-input); color: var(--text-muted); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: background 0.15s, color 0.15s;
-    border: 1px solid rgba(255,255,255,0.08);
   }
-  .tdm-close-btn:hover { background: rgba(255,255,255,0.10); color: #E2E8F0; }
+  .tdm-close-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
 
   .tdm-attachment {
     display: flex; align-items: center; gap: 10px;
-    padding: 9px 12px; border-radius: 10px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
+    padding: 10px 14px; border-radius: 10px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-primary);
     text-decoration: none; transition: background 0.15s;
   }
-  .tdm-attachment:hover { background: rgba(255,255,255,0.06); }
+  .tdm-attachment:hover { background: var(--bg-card-hover); }
 
   .tdm-comment-avatar {
-    width: 30px; height: 30px; border-radius: 9px; flexShrink: 0;
+    width: 30px; height: 30px; border-radius: 9px; flex-shrink: 0;
     background: linear-gradient(135deg, #2563EB, #7C3AED);
     display: flex; align-items: center; justify-content: center;
     font-size: 12px; font-weight: 700; color: #fff;
@@ -206,20 +215,26 @@ const MODAL_CSS = `
   }
 
   .tdm-progress-bar {
-    height: 3px; border-radius: 999px;
-    background: rgba(255,255,255,0.06);
-    overflow: hidden; margin: 2px 0 6px;
+    height: 4px; border-radius: 999px;
+    background: var(--bg-input);
+    overflow: hidden; margin: 4px 0 8px;
+    border: 1px solid var(--border-primary);
   }
   .tdm-progress-fill {
     height: 100%; border-radius: 999px;
     background: linear-gradient(90deg, #10B981, #34D399);
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
 `;
 
 /* ── TaskDetailModal ── */
 const TaskDetailModal = ({ isOpen, onClose, taskId, onUpdated }) => {
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
+  const T = getTokens(isLight);
 
   const [task, setTask] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -400,14 +415,17 @@ const TaskDetailModal = ({ isOpen, onClose, taskId, onUpdated }) => {
             className="tdm"
             style={{
               position: "fixed",
-              inset: 0,
+              top: 76,
+              left: 0,
+              right: 0,
+              bottom: 0,
               zIndex: 200,
               display: "flex",
               justifyContent: "flex-end",
               fontFamily: "'Outfit', sans-serif",
             }}
           >
-            {/* Backdrop */}
+            {/* Backdrop — extends above container to cover full viewport */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -415,11 +433,15 @@ const TaskDetailModal = ({ isOpen, onClose, taskId, onUpdated }) => {
               transition={{ duration: 0.2 }}
               onClick={onClose}
               style={{
-                position: "absolute",
-                inset: 0,
-                background: "rgba(0,0,0,0.65)",
-                backdropFilter: "blur(6px)",
-                WebkitBackdropFilter: "blur(6px)",
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "rgba(0,0,0,0.50)",
+                backdropFilter: "blur(4px)",
+                WebkitBackdropFilter: "blur(4px)",
+                zIndex: -1,
               }}
             />
 
@@ -444,7 +466,10 @@ const TaskDetailModal = ({ isOpen, onClose, taskId, onUpdated }) => {
                 flexDirection: "column",
                 background: T.bg,
                 borderLeft: `1px solid ${T.border}`,
-                boxShadow: "-20px 0 80px rgba(0,0,0,0.6)",
+                borderTop: `1px solid ${T.border}`,
+                borderRadius: "24px 0 0 0",
+                boxShadow: T.shadow,
+                overflow: "hidden",
               }}
             >
               {loading ? (
@@ -477,10 +502,12 @@ const TaskDetailModal = ({ isOpen, onClose, taskId, onUpdated }) => {
                       position: "sticky",
                       top: 0,
                       zIndex: 10,
-                      background: `${T.bg}F5`,
+                      background: T.bgTop,
                       backdropFilter: "blur(20px)",
+                      WebkitBackdropFilter: "blur(20px)",
                       borderBottom: `1px solid ${T.border}`,
-                      padding: "14px 20px 12px",
+                      borderTopLeftRadius: "24px",
+                      padding: "16px 22px 14px",
                     }}
                   >
                     {/* Row 1: status pills + actions */}
@@ -559,7 +586,7 @@ const TaskDetailModal = ({ isOpen, onClose, taskId, onUpdated }) => {
                         display: "flex",
                         gap: 4,
                         padding: 4,
-                        background: "rgba(255,255,255,0.04)",
+                        background: T.subtle,
                         borderRadius: 12,
                         border: `1px solid ${T.border}`,
                       }}
@@ -585,7 +612,7 @@ const TaskDetailModal = ({ isOpen, onClose, taskId, onUpdated }) => {
                     style={{
                       flex: 1,
                       overflowY: "auto",
-                      padding: "20px 20px 40px",
+                      padding: "24px 22px 48px",
                     }}
                   >
                     {activeTab === "details" ? (
@@ -601,19 +628,29 @@ const TaskDetailModal = ({ isOpen, onClose, taskId, onUpdated }) => {
                           type="text"
                           value={title}
                           onChange={(e) => setTitle(e.target.value)}
-                          onBlur={() => handleSave()}
                           placeholder="Task title…"
                           style={{
                             fontSize: 22,
                             fontWeight: 700,
                             color: T.text,
                             background: "transparent",
-                            border: "none",
+                            border: `1px solid transparent`,
+                            borderRadius: 10,
                             outline: "none",
-                            width: "100%",
-                            fontFamily: "'Outfit', sans-serif",
-                            letterSpacing: "-0.02em",
-                            padding: 0,
+                            padding: "4px 8px",
+                            margin: "0 -8px",
+                            width: "calc(100% + 16px)",
+                            fontFamily: "'Syne', sans-serif",
+                            transition: "border-color 0.2s, background 0.2s",
+                          }}
+                          onFocus={e => {
+                            e.target.style.borderColor = T.borderMd;
+                            e.target.style.background = T.input;
+                          }}
+                          onBlur={e => {
+                            handleSave();
+                            e.target.style.borderColor = 'transparent';
+                            e.target.style.background = 'transparent';
                           }}
                         />
 
