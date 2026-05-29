@@ -9,17 +9,18 @@ import { useAuth } from "../context/AuthContext";
 const S = {
   page: {
     minHeight: "100vh",
-    background: "#060810",
+    background: "var(--bg-primary)",
     fontFamily: "'DM Sans', sans-serif",
     position: "relative",
     overflow: "hidden",
     padding: "0 0 80px",
+    transition: "background-color 0.3s ease",
   },
   grid: {
     position: "fixed",
     inset: 0,
     backgroundImage:
-      "linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)",
+      "linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)",
     backgroundSize: "48px 48px",
     pointerEvents: "none",
     zIndex: 0,
@@ -38,20 +39,20 @@ const S = {
     gap: 24,
     flexWrap: "wrap",
     paddingBottom: 28,
-    borderBottom: "1px solid rgba(255,255,255,0.06)",
+    borderBottom: "1px solid var(--border-primary)",
     marginBottom: 28,
   },
   h1: {
     fontSize: 34,
     fontWeight: 700,
     lineHeight: 1.1,
-    color: "#F0F4FF",
+    color: "var(--text-primary)",
     margin: 0,
     fontFamily: "'Syne', sans-serif",
   },
   sub: {
     fontSize: 14,
-    color: "rgba(160,170,200,0.65)",
+    color: "var(--text-secondary)",
     marginTop: 8,
   },
   backBtn: {
@@ -60,9 +61,9 @@ const S = {
     gap: 6,
     padding: "6px 10px",
     borderRadius: 10,
-    border: "1px solid rgba(255,255,255,0.1)",
-    background: "rgba(255,255,255,0.04)",
-    color: "#E2E8F0",
+    border: "1px solid var(--border-primary)",
+    background: "var(--bg-input)",
+    color: "var(--text-primary)",
     fontSize: 12,
     fontWeight: 600,
     cursor: "pointer",
@@ -70,7 +71,7 @@ const S = {
   sectionTitle: {
     fontSize: 14,
     fontWeight: 700,
-    color: "#E2E8F0",
+    color: "var(--text-primary)",
     margin: "24px 0 12px",
   },
   memberRow: {
@@ -80,16 +81,16 @@ const S = {
     gap: 12,
     padding: "10px 12px",
     borderRadius: 12,
-    border: "1px solid rgba(255,255,255,0.06)",
-    background: "rgba(255,255,255,0.03)",
+    border: "1px solid var(--border-primary)",
+    background: "var(--bg-card)",
     marginBottom: 8,
   },
   roleSelect: {
     padding: "6px 10px",
     borderRadius: 10,
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    color: "#E2E8F0",
+    background: "var(--bg-input)",
+    border: "1px solid var(--border-primary)",
+    color: "var(--text-primary)",
     fontSize: 12,
   },
   removeBtn: {
@@ -98,8 +99,8 @@ const S = {
     gap: 6,
     padding: "6px 10px",
     borderRadius: 10,
-    border: "1px solid rgba(255,255,255,0.1)",
-    background: "rgba(255,255,255,0.04)",
+    border: "1px solid var(--border-primary)",
+    background: "var(--bg-input)",
     color: "#F87171",
     fontSize: 12,
     cursor: "pointer",
@@ -174,7 +175,7 @@ const WorkspaceManage = () => {
       <div style={S.page}>
         <div style={S.grid} />
         <div style={S.inner}>
-          <div style={{ color: "rgba(160,170,200,0.6)" }}>Loading...</div>
+          <div style={{ color: "var(--text-muted)" }}>Loading...</div>
         </div>
       </div>
     );
@@ -188,7 +189,7 @@ const WorkspaceManage = () => {
           <button style={S.backBtn} onClick={() => navigate("/team")}>
             <ArrowLeft size={14} /> Back to Team
           </button>
-          <div style={{ color: "rgba(160,170,200,0.6)", marginTop: 16 }}>
+          <div style={{ color: "var(--text-muted)", marginTop: 16 }}>
             Workspace not found.
           </div>
         </div>
@@ -219,10 +220,10 @@ const WorkspaceManage = () => {
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <Shield size={14} />
                 <div>
-                  <div style={{ color: "#E2E8F0", fontSize: 13 }}>
+                  <div style={{ color: "var(--text-primary)", fontSize: 13 }}>
                     {member.user?.name || "User"}
                   </div>
-                  <div style={{ color: "rgba(160,170,200,0.6)", fontSize: 12 }}>
+                  <div style={{ color: "var(--text-muted)", fontSize: 12 }}>
                     {member.user?.email || ""}
                   </div>
                 </div>
