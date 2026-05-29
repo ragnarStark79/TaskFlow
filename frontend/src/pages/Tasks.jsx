@@ -56,17 +56,18 @@ const STATUS_TABS = [
 const S = {
   page: {
     minHeight: "100vh",
-    background: "#060810",
+    background: "var(--bg-primary)",
     fontFamily: "'DM Sans', sans-serif",
     position: "relative",
     overflow: "hidden",
     padding: "0 0 80px",
+    transition: "background-color 0.3s ease",
   },
   grid: {
     position: "fixed",
     inset: 0,
     backgroundImage:
-      "linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)",
+      "linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)",
     backgroundSize: "48px 48px",
     pointerEvents: "none",
     zIndex: 0,
@@ -79,7 +80,7 @@ const S = {
     height: 520,
     borderRadius: "50%",
     background:
-      "radial-gradient(circle, rgba(56,182,255,0.12) 0%, transparent 70%)",
+      "radial-gradient(circle, var(--orb-blue) 0%, transparent 70%)",
     filter: "blur(70px)",
     pointerEvents: "none",
     zIndex: 0,
@@ -92,7 +93,7 @@ const S = {
     height: 600,
     borderRadius: "50%",
     background:
-      "radial-gradient(circle, rgba(120,80,255,0.12) 0%, transparent 70%)",
+      "radial-gradient(circle, var(--orb-purple) 0%, transparent 70%)",
     filter: "blur(80px)",
     pointerEvents: "none",
     zIndex: 0,
@@ -111,7 +112,7 @@ const S = {
     gap: 24,
     flexWrap: "wrap",
     paddingBottom: 28,
-    borderBottom: "1px solid rgba(255,255,255,0.06)",
+    borderBottom: "1px solid var(--border-primary)",
     marginBottom: 28,
   },
   headerActions: {
@@ -126,12 +127,12 @@ const S = {
     padding: "10px 18px",
     borderRadius: 12,
     border: "none",
-    background: "linear-gradient(135deg, #1B6FE8 0%, #7B3FE4 100%)",
+    background: "var(--gradient-brand)",
     color: "#fff",
     fontSize: 13,
     fontWeight: 600,
     cursor: "pointer",
-    boxShadow: "0 8px 24px rgba(27,111,232,0.35)",
+    boxShadow: "var(--shadow-btn)",
   },
   eyebrow: {
     display: "inline-flex",
@@ -139,8 +140,8 @@ const S = {
     gap: 7,
     padding: "4px 12px",
     borderRadius: 99,
-    background: "rgba(56,182,255,0.09)",
-    border: "1px solid rgba(56,182,255,0.20)",
+    background: "var(--bg-badge)",
+    border: "1px solid var(--border-accent)",
     marginBottom: 12,
   },
   eyebrowDot: {
@@ -148,26 +149,26 @@ const S = {
     height: 6,
     borderRadius: "50%",
     background: "#38B6FF",
-    boxShadow: "0 0 7px rgba(56,182,255,0.8)",
+    boxShadow: "0 0 7px var(--text-accent)",
   },
   eyebrowText: {
     fontSize: 11,
     fontWeight: 600,
     letterSpacing: "0.08em",
-    color: "#38B6FF",
+    color: "var(--text-accent)",
     textTransform: "uppercase",
   },
   h1: {
     fontSize: 36,
     fontWeight: 700,
     lineHeight: 1.1,
-    color: "#F0F4FF",
+    color: "var(--text-primary)",
     margin: 0,
     fontFamily: "'Syne', sans-serif",
   },
   subtext: {
     fontSize: 14,
-    color: "rgba(160,170,200,0.65)",
+    color: "var(--text-secondary)",
     marginTop: 8,
   },
   workspaceChip: {
@@ -182,7 +183,7 @@ const S = {
   sectionTitle: {
     fontSize: 14,
     fontWeight: 700,
-    color: "#E2E8F0",
+    color: "var(--text-primary)",
     margin: "0 0 12px",
   },
   projectGrid: {
@@ -203,15 +204,15 @@ const S = {
     gap: 8,
     padding: "8px 16px",
     borderRadius: 12,
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.07)",
+    background: "var(--bg-input)",
+    border: "1px solid var(--border-primary)",
     fontSize: 13,
-    color: "rgba(180,190,220,0.7)",
+    color: "var(--text-body)",
   },
   statNum: {
     fontWeight: 700,
     fontSize: 15,
-    color: "#F0F4FF",
+    color: "var(--text-primary)",
   },
   filters: {
     display: "flex",
@@ -226,9 +227,9 @@ const S = {
     gap: 8,
     padding: "10px 12px",
     borderRadius: 12,
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.07)",
-    color: "#E2E8F0",
+    background: "var(--bg-input)",
+    border: "1px solid var(--border-primary)",
+    color: "var(--text-primary)",
     flex: "1 1 260px",
   },
   searchInput: {
@@ -244,9 +245,9 @@ const S = {
     width: "100%",
     padding: "12px 14px",
     borderRadius: 12,
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.07)",
-    color: "#E2E8F0",
+    background: "var(--bg-input)",
+    border: "1px solid var(--border-primary)",
+    color: "var(--text-primary)",
     fontSize: 13,
     fontFamily: "inherit",
   },
@@ -256,9 +257,9 @@ const S = {
     gap: 6,
     padding: "9px 12px",
     borderRadius: 12,
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.07)",
-    color: "rgba(200,210,230,0.75)",
+    background: "var(--bg-input)",
+    border: "1px solid var(--border-primary)",
+    color: "var(--text-body)",
     fontSize: 12,
     fontWeight: 600,
     cursor: "pointer",
@@ -282,15 +283,15 @@ const S = {
   tab: {
     padding: "7px 14px",
     borderRadius: 999,
-    border: "1px solid rgba(255,255,255,0.08)",
+    border: "1px solid var(--border-primary)",
     fontSize: 12,
     fontWeight: 600,
-    color: "rgba(160,170,200,0.65)",
+    color: "var(--text-secondary)",
     background: "transparent",
     cursor: "pointer",
   },
   tabActive: {
-    color: "#E2E8F0",
+    color: "var(--text-primary)",
     borderColor: "rgba(59,130,246,0.5)",
     background: "rgba(59,130,246,0.15)",
   },
@@ -300,14 +301,14 @@ const S = {
     gap: 18,
   },
   card: {
-    background: "rgba(255,255,255,0.035)",
-    border: "1px solid rgba(255,255,255,0.07)",
+    background: "var(--bg-card)",
+    border: "1px solid var(--border-primary)",
     borderRadius: 20,
     padding: "18px",
     display: "flex",
     flexDirection: "column",
     gap: 12,
-    boxShadow: "0 8px 26px rgba(0,0,0,0.25)",
+    boxShadow: "var(--shadow-card)",
     transition: "transform 0.2s, border-color 0.2s",
   },
   cardTop: {
@@ -319,13 +320,13 @@ const S = {
   title: {
     fontSize: 16,
     fontWeight: 700,
-    color: "#F0F4FF",
+    color: "var(--text-primary)",
     margin: 0,
     fontFamily: "'Syne', sans-serif",
   },
   desc: {
     fontSize: 13,
-    color: "rgba(160,170,200,0.65)",
+    color: "var(--text-secondary)",
     lineHeight: 1.5,
     display: "-webkit-box",
     WebkitLineClamp: 2,
@@ -343,9 +344,9 @@ const S = {
     fontWeight: 600,
     padding: "4px 8px",
     borderRadius: 999,
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    color: "rgba(200,210,230,0.75)",
+    background: "var(--bg-input)",
+    border: "1px solid var(--border-primary)",
+    color: "var(--text-body)",
   },
   cardFooter: {
     display: "flex",
@@ -353,9 +354,9 @@ const S = {
     justifyContent: "space-between",
     gap: 10,
     paddingTop: 10,
-    borderTop: "1px solid rgba(255,255,255,0.06)",
+    borderTop: "1px solid var(--border-secondary)",
     fontSize: 12,
-    color: "rgba(160,170,200,0.65)",
+    color: "var(--text-secondary)",
   },
   actionBtn: {
     display: "inline-flex",
@@ -363,9 +364,9 @@ const S = {
     gap: 6,
     padding: "6px 10px",
     borderRadius: 10,
-    border: "1px solid rgba(255,255,255,0.1)",
-    background: "rgba(255,255,255,0.04)",
-    color: "#E2E8F0",
+    border: "1px solid var(--border-primary)",
+    background: "var(--bg-input)",
+    color: "var(--text-primary)",
     fontSize: 12,
     fontWeight: 600,
     cursor: "pointer",
@@ -376,9 +377,9 @@ const S = {
     gap: 6,
     padding: "6px 10px",
     borderRadius: 10,
-    border: "1px solid rgba(255,255,255,0.08)",
+    border: "1px solid var(--border-primary)",
     background: "transparent",
-    color: "rgba(200,210,230,0.7)",
+    color: "var(--text-body)",
     fontSize: 12,
     fontWeight: 600,
     cursor: "pointer",
@@ -390,8 +391,8 @@ const S = {
     justifyContent: "center",
     padding: "80px 24px",
     borderRadius: 28,
-    background: "rgba(255,255,255,0.03)",
-    border: "1px dashed rgba(255,255,255,0.08)",
+    background: "var(--bg-card)",
+    border: "1px dashed var(--border-primary)",
     textAlign: "center",
   },
   emptyIcon: {
@@ -409,13 +410,13 @@ const S = {
   emptyTitle: {
     fontSize: 20,
     fontWeight: 700,
-    color: "#F0F4FF",
+    color: "var(--text-primary)",
     margin: "0 0 8px",
     fontFamily: "'Syne', sans-serif",
   },
   emptyText: {
     fontSize: 14,
-    color: "rgba(160,170,200,0.55)",
+    color: "var(--text-muted)",
     margin: "0 0 24px",
   },
   skeletonGrid: {
@@ -426,8 +427,8 @@ const S = {
   skeleton: {
     height: 180,
     borderRadius: 20,
-    background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.06)",
+    background: "var(--bg-input)",
+    border: "1px solid var(--border-primary)",
     overflow: "hidden",
     position: "relative",
   },
@@ -455,7 +456,7 @@ const StatusPill = ({ status }) => {
         ...S.chip,
         background: colorMap[status] || "rgba(59,130,246,0.2)",
         borderColor: "transparent",
-        color: "#E2E8F0",
+        color: "var(--text-primary)",
       }}
     >
       {label}
@@ -477,7 +478,7 @@ const PriorityPill = ({ priority }) => {
         ...S.chip,
         background: colorMap[priority] || "rgba(234,179,8,0.2)",
         borderColor: "transparent",
-        color: "#E2E8F0",
+        color: "var(--text-primary)",
       }}
     >
       {label}
@@ -508,14 +509,14 @@ const TaskCardItem = ({ task, onOpen, onGoProject, onManageWorkspace }) => {
       onMouseEnter={(e) =>
         gsap.to(e.currentTarget, {
           y: -4,
-          borderColor: "rgba(59,130,246,0.35)",
+          borderColor: "var(--hover-card-border)",
           duration: 0.2,
         })
       }
       onMouseLeave={(e) =>
         gsap.to(e.currentTarget, {
           y: 0,
-          borderColor: "rgba(255,255,255,0.07)",
+          borderColor: "var(--border-primary)",
           duration: 0.2,
         })
       }
@@ -590,14 +591,14 @@ const ProjectCardItem = ({ project, onOpenBoard, onManageWorkspace }) => {
       onMouseEnter={(e) =>
         gsap.to(e.currentTarget, {
           y: -4,
-          borderColor: "rgba(59,130,246,0.35)",
+          borderColor: "var(--hover-card-border)",
           duration: 0.2,
         })
       }
       onMouseLeave={(e) =>
         gsap.to(e.currentTarget, {
           y: 0,
-          borderColor: "rgba(255,255,255,0.07)",
+          borderColor: "var(--border-primary)",
           duration: 0.2,
         })
       }
@@ -691,7 +692,7 @@ const ProjectWorkspaceModal = ({
         position: 'fixed',
         inset: 0,
         zIndex: 120,
-        background: 'rgba(6,8,16,0.7)',
+        background: 'var(--modal-overlay)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -706,19 +707,19 @@ const ProjectWorkspaceModal = ({
         style={{
           width: '100%',
           maxWidth: 420,
-          background: 'rgba(15,20,32,0.95)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--modal-bg)',
+          border: '1px solid var(--border-primary)',
           borderRadius: 18,
           padding: 20,
-          boxShadow: '0 24px 60px rgba(0,0,0,0.5)',
+          boxShadow: 'var(--shadow-elevated)',
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
           <div>
-            <h3 style={{ margin: 0, color: '#F0F4FF', fontSize: 18, fontWeight: 700 }}>
+            <h3 style={{ margin: 0, color: 'var(--text-primary)', fontSize: 18, fontWeight: 700 }}>
               Workspace for {project.name}
             </h3>
-            <p style={{ margin: '6px 0 0', color: 'rgba(160,170,200,0.6)', fontSize: 12 }}>
+            <p style={{ margin: '6px 0 0', color: 'var(--text-muted)', fontSize: 12 }}>
               Attach to a workspace or set as standalone.
             </p>
           </div>

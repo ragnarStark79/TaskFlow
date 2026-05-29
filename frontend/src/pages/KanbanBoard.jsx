@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
+import { useTheme } from "../context/ThemeContext";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   DndContext,
@@ -114,9 +115,10 @@ const DroppableColumn = ({ colId, children }) => {
 const Column = ({ column, tasks, onAddTask, onTaskClick }) => {
   const colRef = useRef(null);
   const barRef = useRef(null);
+  const { theme } = useTheme();
+  const isLight = theme === 'light';
   const accent = getAccent(column.id);
 
-  /* Animate accent bar on mount */
   useEffect(() => {
     if (!barRef.current) return;
     gsap.fromTo(
@@ -130,20 +132,24 @@ const Column = ({ column, tasks, onAddTask, onTaskClick }) => {
   const handleColEnter = () => {
     if (!colRef.current) return;
     gsap.to(colRef.current, {
-      boxShadow: `0 12px 40px ${accent.glow}, 0 0 0 1px ${accent.bar}20`,
-      y: -4,
+      boxShadow: isLight
+        ? `0 8px 28px ${accent.bar}35, 0 2px 8px ${accent.bar}20`
+        : `0 8px 32px rgba(0,0,0,0.5), 0 0 28px ${accent.bar}30`,
+      y: -3,
       duration: 0.3,
-      ease: "power2.out",
+      ease: 'power2.out',
     });
   };
 
   const handleColLeave = () => {
     if (!colRef.current) return;
     gsap.to(colRef.current, {
-      boxShadow: "0 4px 16px rgba(0, 0, 0, 0.25)",
+      boxShadow: isLight
+        ? `0 2px 12px rgba(0,0,0,0.06), 0 0 0 1px ${accent.bar}18`
+        : `0 4px 24px rgba(0,0,0,0.35), 0 0 20px ${accent.bar}15`,
       y: 0,
       duration: 0.3,
-      ease: "power2.out",
+      ease: 'power2.out',
     });
   };
 
@@ -158,10 +164,10 @@ const Column = ({ column, tasks, onAddTask, onTaskClick }) => {
 
   const handleAddBtnLeave = (e) => {
     gsap.to(e.currentTarget, {
-      background: "rgba(255, 255, 255, 0.05)",
+      background: 'var(--bg-input)',
       scale: 1,
       duration: 0.2,
-      ease: "power2.out",
+      ease: 'power2.out',
     });
   };
 
@@ -171,32 +177,32 @@ const Column = ({ column, tasks, onAddTask, onTaskClick }) => {
       onMouseEnter={handleColEnter}
       onMouseLeave={handleColLeave}
       style={{
-        flex: "1 1 0",
-        minWidth: "0",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: "16px",
-        background:
-          "linear-gradient(135deg, rgba(20, 25, 40, 0.8) 0%, rgba(15, 20, 35, 0.6) 100%)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
-        overflow: "hidden",
-        boxShadow: "0 4px 16px rgba(0, 0, 0, 0.25)",
-        transition: "all 0.3s ease",
+        flex: '1 1 0',
+        minWidth: '0',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: '16px',
+        // Gradient border trick: padding-box uses solid bg, border-box uses accent gradient
+        background: isLight
+          ? `linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+             linear-gradient(135deg, ${accent.bar}, ${accent.bar}55) border-box`
+          : `linear-gradient(#0D1120, #0D1120) padding-box,
+             linear-gradient(135deg, ${accent.bar}AA, ${accent.bar}33) border-box`,
+        border: '2px solid transparent',
+        boxShadow: isLight
+          ? `0 2px 12px rgba(0,0,0,0.06), 0 0 0 1px ${accent.bar}18`
+          : `0 4px 24px rgba(0,0,0,0.35), 0 0 20px ${accent.bar}15`,
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
       }}
     >
-      {/* Accent bar */}
+      {/* Accent bar removed — gradient border replaces it in both themes */}
       <div
         ref={barRef}
-        style={{
-          height: "3px",
-          flexShrink: 0,
-          background: `linear-gradient(90deg, ${accent.bar} 0%, ${accent.bar}60 100%)`,
-          boxShadow: `0 0 16px ${accent.glow}`,
-          transformOrigin: "left center",
-        }}
+        style={{ height: 0, overflow: 'hidden' }}
       />
 
       {/* Column Header */}
@@ -207,8 +213,8 @@ const Column = ({ column, tasks, onAddTask, onTaskClick }) => {
           alignItems: "center",
           gap: "10px",
           padding: "14px 14px 12px",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
-          background: accent.bg,
+          borderBottom: '1px solid var(--border-primary)',
+          background: isLight ? `${accent.bar}08` : 'var(--bg-input)',
         }}
       >
         {/* Status dot */}
@@ -232,7 +238,7 @@ const Column = ({ column, tasks, onAddTask, onTaskClick }) => {
             fontWeight: "700",
             textTransform: "uppercase",
             letterSpacing: "0.08em",
-            color: accent.label,
+            color: 'var(--text-primary)',
             fontFamily: "'Outfit', sans-serif",
           }}
         >
@@ -265,13 +271,13 @@ const Column = ({ column, tasks, onAddTask, onTaskClick }) => {
             width: "28px",
             height: "28px",
             borderRadius: "8px",
-            border: "none",
-            background: "rgba(255, 255, 255, 0.05)",
+            background: 'var(--bg-input)',
+            border: '1px solid var(--border-primary)',
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             cursor: "pointer",
-            color: accent.label,
+            color: 'var(--text-secondary)',
             flexShrink: 0,
             padding: "0",
             transition: "all 0.2s ease",
@@ -606,7 +612,7 @@ const KanbanBoard = () => {
           justifyContent: "center",
           flexDirection: "column",
           gap: "16px",
-          background: "linear-gradient(135deg, #080B14 0%, #0F1419 100%)",
+          background: "var(--bg-primary)",
           fontFamily: "'Outfit', sans-serif",
         }}
       >
@@ -632,10 +638,10 @@ const KanbanBoard = () => {
       ref={rootRef}
       className="kb-root"
       style={{
-        height: "calc(100vh - 60px)",
+        height: 'calc(100vh - 76px)',
         display: "flex",
         flexDirection: "column",
-        background: "linear-gradient(135deg, #080B14 0%, #0F1419 100%)",
+        background: "var(--bg-primary)",
         position: "relative",
         overflow: "hidden",
       }}
@@ -647,14 +653,14 @@ const KanbanBoard = () => {
         ref={orb1Ref}
         style={{
           position: "absolute",
-          top: "-15%",
-          left: "-10%",
+          top: "-10%",
+          left: "-5%",
           width: "500px",
           height: "500px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 65%)",
-          filter: "blur(80px)",
+            "radial-gradient(circle, var(--orb-blue) 0%, transparent 70%)",
+          filter: "blur(70px)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -663,14 +669,14 @@ const KanbanBoard = () => {
         ref={orb2Ref}
         style={{
           position: "absolute",
-          bottom: "-20%",
-          right: "-12%",
-          width: "580px",
-          height: "580px",
+          bottom: "-15%",
+          right: "-8%",
+          width: "600px",
+          height: "600px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 65%)",
-          filter: "blur(90px)",
+            "radial-gradient(circle, var(--orb-purple) 0%, transparent 70%)",
+          filter: "blur(80px)",
           pointerEvents: "none",
           zIndex: 0,
         }}
@@ -684,10 +690,10 @@ const KanbanBoard = () => {
           zIndex: 0,
           pointerEvents: "none",
           backgroundImage: `
-                        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px)
+                        linear-gradient(var(--grid-line) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)
                     `,
-          backgroundSize: "56px 56px",
+          backgroundSize: "48px 48px",
         }}
       />
 
@@ -702,10 +708,10 @@ const KanbanBoard = () => {
           alignItems: "center",
           gap: "14px",
           padding: "14px 22px",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
-          background: "rgba(8, 11, 20, 0.85)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
+          borderBottom: '1px solid var(--border-primary)',
+          background: 'var(--bg-card)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
           opacity: 0,
         }}
       >
@@ -714,18 +720,18 @@ const KanbanBoard = () => {
           onClick={() => navigate(-1)}
           onMouseEnter={(e) => {
             gsap.to(e.currentTarget, {
-              background: "rgba(255, 255, 255, 0.12)",
+              background: 'var(--bg-card-hover)',
               scale: 1.08,
               duration: 0.2,
-              ease: "power2.out",
+              ease: 'power2.out',
             });
           }}
           onMouseLeave={(e) => {
             gsap.to(e.currentTarget, {
-              background: "rgba(255, 255, 255, 0.06)",
+              background: 'var(--bg-input)',
               scale: 1,
               duration: 0.2,
-              ease: "power2.out",
+              ease: 'power2.out',
             });
           }}
           style={{
@@ -733,13 +739,13 @@ const KanbanBoard = () => {
             height: "36px",
             borderRadius: "10px",
             flexShrink: 0,
-            background: "rgba(255, 255, 255, 0.06)",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
+            background: 'var(--bg-input)',
+            border: '1px solid var(--border-primary)',
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             cursor: "pointer",
-            color: "#94A3B8",
+            color: 'var(--text-secondary)',
             padding: "0",
             transition: "all 0.2s ease",
           }}
@@ -766,7 +772,7 @@ const KanbanBoard = () => {
             fontSize: "16px",
             fontWeight: "700",
             margin: "0",
-            color: "#F1F5F9",
+            color: 'var(--text-primary)',
             letterSpacing: "-0.02em",
             fontFamily: "'Outfit', sans-serif",
           }}
@@ -780,11 +786,11 @@ const KanbanBoard = () => {
             padding: "4px 12px",
             borderRadius: "999px",
             flexShrink: 0,
-            background: "rgba(255, 255, 255, 0.06)",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
+            background: 'var(--bg-input)',
+            border: '1px solid var(--border-primary)',
             fontSize: "12px",
             fontWeight: "600",
-            color: "#64748B",
+            color: 'var(--text-secondary)',
           }}
         >
           {tasks.length} task{tasks.length !== 1 ? "s" : ""}
@@ -799,7 +805,7 @@ const KanbanBoard = () => {
             marginLeft: "auto",
             marginRight: "14px",
             paddingRight: "14px",
-            borderRight: "1px solid rgba(255, 255, 255, 0.06)",
+            borderRight: '1px solid var(--border-primary)',
           }}
         >
           {columns.map((col) => {
@@ -936,8 +942,9 @@ const KanbanBoard = () => {
         projectId={projectId}
         defaultStatus={newTaskColumn}
         onCreated={(task) => {
-          setTasks((prev) => [...prev, task]);
-          toast.success("Task created successfully");
+          // Do NOT add to state here — the socket 'taskCreated' event
+          // already handles adding it with deduplication.
+          // Just close is handled inside CreateTaskModal itself.
         }}
       />
       <TaskDetailModal
