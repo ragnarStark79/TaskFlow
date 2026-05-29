@@ -6,11 +6,11 @@ import TaskCard from './TaskCard';
 import gsap from 'gsap';
 
 const COLUMN_COLORS = {
-    backlog:     { from: '#9CA3AF', to: '#6B7280', shadow: 'rgba(156,163,175,0.2)' },
-    todo:        { from: '#38B6FF', to: '#1B6FE8', shadow: 'rgba(56,182,255,0.25)' },
-    in_progress: { from: '#FCD34D', to: '#F59E0B', shadow: 'rgba(252,211,77,0.25)' },
-    review:      { from: '#A78BFA', to: '#7B3FE4', shadow: 'rgba(167,139,250,0.25)' },
-    done:        { from: '#34D399', to: '#10B981', shadow: 'rgba(52,211,153,0.25)' },
+    backlog:     { from: '#9CA3AF', to: '#6B7280', shadow: 'rgba(156,163,175,0.15)' },
+    todo:        { from: '#38B6FF', to: '#1B6FE8', shadow: 'rgba(56,182,255,0.18)' },
+    in_progress: { from: '#FCD34D', to: '#F59E0B', shadow: 'rgba(252,211,77,0.18)' },
+    review:      { from: '#A78BFA', to: '#7B3FE4', shadow: 'rgba(167,139,250,0.18)' },
+    done:        { from: '#34D399', to: '#10B981', shadow: 'rgba(52,211,153,0.18)' },
 };
 
 const BoardColumn = ({ column, tasks, onAddTask, onTaskClick, index }) => {
@@ -32,67 +32,112 @@ const BoardColumn = ({ column, tasks, onAddTask, onTaskClick, index }) => {
     return (
         <div
             ref={colRef}
-            className="flex flex-col w-80 flex-shrink-0 relative overflow-hidden"
             style={{
-                background: 'rgba(255,255,255,0.02)',
+                display: 'flex',
+                flexDirection: 'column',
+                width: 300,
+                flexShrink: 0,
+                position: 'relative',
+                overflow: 'hidden',
+                background: 'var(--bg-card)',
                 backdropFilter: 'blur(16px)',
                 WebkitBackdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255,255,255,0.06)',
-                borderRadius: '24px',
-                boxShadow: `0 12px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)`,
+                border: '1px solid var(--border-primary)',
+                borderRadius: 20,
+                boxShadow: 'var(--shadow-card)',
+                transition: 'background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
             }}
         >
-            {/* Top gradient accent line */}
-            <div 
-                className="absolute top-0 left-0 right-0 h-1" 
-                style={{ background: `linear-gradient(90deg, ${colorConfig.from}, ${colorConfig.to})` }} 
-            />
-
-            {/* Subtle ambient glow behind the header */}
-            <div 
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-24 rounded-full pointer-events-none"
-                style={{ background: `radial-gradient(circle, ${colorConfig.shadow} 0%, transparent 70%)`, filter: 'blur(20px)' }}
-            />
+            {/* Subtle ambient glow behind header */}
+            <div style={{
+                position: 'absolute', top: 0, left: '50%',
+                transform: 'translateX(-50%)',
+                width: 160, height: 80, borderRadius: '50%',
+                background: `radial-gradient(circle, ${colorConfig.shadow} 0%, transparent 70%)`,
+                filter: 'blur(16px)',
+                pointerEvents: 'none',
+            }} />
 
             {/* Column Header */}
-            <div className="px-5 py-4 flex items-center justify-between relative z-10 border-b border-white/5">
-                <div className="flex items-center gap-2.5">
-                    <span 
-                        className="w-2.5 h-2.5 rounded-full" 
-                        style={{ background: colorConfig.from, boxShadow: `0 0 8px ${colorConfig.from}` }} 
-                    />
-                    <h3 className="text-sm font-bold text-gray-100 tracking-wider" style={{ fontFamily: "'Syne', sans-serif" }}>
+            <div style={{
+                padding: '14px 16px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                position: 'relative', zIndex: 10,
+                borderBottom: '1px solid var(--border-secondary)',
+            }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{
+                        width: 9, height: 9, borderRadius: '50%', flexShrink: 0,
+                        background: colorConfig.from,
+                        boxShadow: `0 0 6px ${colorConfig.from}`,
+                    }} />
+                    <h3 style={{
+                        fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
+                        textTransform: 'uppercase',
+                        color: 'var(--text-primary)',
+                        fontFamily: "'Syne', sans-serif",
+                        margin: 0,
+                    }}>
                         {column.name}
                     </h3>
-                    <span className="text-[11px] bg-white/10 text-gray-300 px-2.5 py-0.5 rounded-full font-bold">
+                    <span style={{
+                        fontSize: 11, fontWeight: 700,
+                        padding: '1px 8px', borderRadius: 999,
+                        background: 'var(--bg-input)',
+                        color: 'var(--text-secondary)',
+                        border: '1px solid var(--border-primary)',
+                    }}>
                         {tasks.length}
                     </span>
                 </div>
-                <button 
+                <button
                     onClick={() => onAddTask(column.id)}
-                    className="p-1.5 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition-all hover:scale-110"
+                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--bg-input)'; e.currentTarget.style.color = 'var(--text-primary)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-tertiary)'; }}
+                    style={{
+                        width: 28, height: 28, borderRadius: 8,
+                        border: '1px solid var(--border-primary)',
+                        background: 'transparent',
+                        color: 'var(--text-tertiary)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        cursor: 'pointer', transition: 'all 0.15s',
+                    }}
                 >
-                    <Plus size={16} />
+                    <Plus size={14} />
                 </button>
             </div>
 
-            {/* Task List (Droppable + Sortable Zone) */}
+            {/* Task List — Droppable + Sortable */}
             <div
                 ref={setNodeRef}
-                className="flex-1 px-3 pt-4 pb-4 space-y-3 overflow-y-auto min-h-[250px] transition-colors relative z-10"
                 style={{
-                    backgroundColor: isOver ? 'rgba(255,255,255,0.02)' : 'transparent',
-                    boxShadow: isOver ? `inset 0 0 0 1px ${colorConfig.shadow}` : 'none'
+                    flex: 1,
+                    padding: '12px 10px 14px',
+                    display: 'flex', flexDirection: 'column', gap: 10,
+                    overflowY: 'auto',
+                    minHeight: 200,
+                    position: 'relative', zIndex: 10,
+                    backgroundColor: isOver ? 'var(--bg-input)' : 'transparent',
+                    boxShadow: isOver ? `inset 0 0 0 2px ${colorConfig.from}40` : 'none',
+                    transition: 'background 0.15s, box-shadow 0.15s',
                 }}
             >
                 <SortableContext items={taskIds} strategy={verticalListSortingStrategy}>
-                    {tasks.map((task) => (
+                    {tasks.map(task => (
                         <TaskCard key={task._id} task={task} onClick={onTaskClick} />
                     ))}
                 </SortableContext>
 
                 {tasks.length === 0 && (
-                    <div className="flex items-center justify-center h-24 border border-dashed border-white/10 rounded-xl text-gray-600 text-sm font-medium">
+                    <div style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        height: 80,
+                        border: '1px dashed var(--border-primary)',
+                        borderRadius: 14,
+                        color: 'var(--text-tertiary)',
+                        fontSize: 12,
+                        fontWeight: 500,
+                    }}>
                         Drop tasks here
                     </div>
                 )}

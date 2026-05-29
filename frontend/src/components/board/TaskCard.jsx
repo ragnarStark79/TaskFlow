@@ -96,9 +96,9 @@ const TaskCard = ({ task, onClick, isDragging: parentIsDragging }) => {
     if (cardRef.current) {
       gsap.to(cardRef.current, {
         y: 0,
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+        boxShadow: 'var(--shadow-card)',
         duration: 0.3,
-        ease: "power2.out",
+        ease: 'power2.out',
       });
     }
   };
@@ -112,17 +112,17 @@ const TaskCard = ({ task, onClick, isDragging: parentIsDragging }) => {
         onMouseLeave={handleMouseLeave}
         className={`relative overflow-hidden cursor-grab active:cursor-grabbing transition-all duration-200`}
         style={{
-          background:
-            "linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)",
+          background: 'var(--bg-card)',
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
           borderRadius: "14px",
-          border: `1px solid rgba(255, 255, 255, 0.1)`,
+          border: '1px solid var(--border-primary)',
           padding: "16px",
-          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+          boxShadow: 'var(--shadow-card)',
           opacity: isCardDragging ? 0.5 : 1,
           scale: isCardDragging ? 1.05 : 1,
           zIndex: isCardDragging ? 50 : "auto",
+          transition: 'background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease',
         }}
       >
         {/* Top accent line */}
@@ -198,11 +198,10 @@ const TaskCard = ({ task, onClick, isDragging: parentIsDragging }) => {
             style={{
               fontSize: "14px",
               fontWeight: "600",
-              color: "#F1F5F9",
+              color: 'var(--text-primary)',
               margin: "0 0 8px 0",
               lineHeight: "1.4",
               transition: "color 0.3s ease",
-              color: isHovered ? "#60A5FA" : "#F1F5F9",
             }}
           >
             {task.title}
@@ -213,7 +212,7 @@ const TaskCard = ({ task, onClick, isDragging: parentIsDragging }) => {
             <p
               style={{
                 fontSize: "12px",
-                color: "#9CA3AF",
+                color: 'var(--text-secondary)',
                 margin: "0 0 12px 0",
                 lineHeight: "1.5",
                 display: "-webkit-box",
@@ -231,7 +230,7 @@ const TaskCard = ({ task, onClick, isDragging: parentIsDragging }) => {
           <div
             style={{
               height: "1px",
-              background: `linear-gradient(90deg, rgba(255,255,255,0.05), ${priorityConfig.color}20, rgba(255,255,255,0.05))`,
+              background: `linear-gradient(90deg, var(--border-secondary), ${priorityConfig.color}30, var(--border-secondary))`,
               margin: "12px 0",
               transition: "all 0.3s ease",
               opacity: isHovered ? 1 : 0.5,
@@ -281,7 +280,7 @@ const TaskCard = ({ task, onClick, isDragging: parentIsDragging }) => {
                 alignItems: "center",
                 justifyContent: "space-between",
                 fontSize: "11px",
-                color: "#6B7280",
+                color: 'var(--text-tertiary)',
               }}
             >
               <div
