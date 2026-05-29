@@ -1,4 +1,106 @@
-/* Global Styles */
+/* Global Styles — Theme-Aware via CSS Custom Properties */
+
+/* ─── Dark Mode (default) ─── */
+:root {
+    --bg-primary: #060810;
+    --bg-secondary: #0A0D14;
+    --bg-card: rgba(255, 255, 255, 0.035);
+    --bg-card-hover: rgba(255, 255, 255, 0.065);
+    --bg-input: rgba(255, 255, 255, 0.04);
+    --bg-input-hover: rgba(255, 255, 255, 0.065);
+    --bg-elevated: rgba(12, 16, 28, 0.97);
+    --bg-badge: rgba(56, 182, 255, 0.09);
+    
+    --border-primary: rgba(255, 255, 255, 0.07);
+    --border-secondary: rgba(255, 255, 255, 0.05);
+    --border-accent: rgba(56, 182, 255, 0.20);
+    --border-input-focus: rgba(56, 182, 255, 0.45);
+    
+    --text-primary: #F0F4FF;
+    --text-secondary: rgba(160, 170, 200, 0.65);
+    --text-tertiary: rgba(160, 170, 200, 0.45);
+    --text-accent: #38B6FF;
+    --text-danger: #FF6B6B;
+    --text-heading: #F0F4FF;
+    --text-body: rgba(200, 210, 230, 0.75);
+    --text-muted: rgba(160, 170, 200, 0.55);
+    
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.25);
+    --shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.35);
+    --shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.55);
+    --shadow-brand: 0 4px 14px rgba(27, 111, 232, 0.45);
+    --shadow-btn: 0 8px 28px rgba(27, 111, 232, 0.35);
+    
+    --nav-bg: rgba(8, 10, 20, 0.75);
+    --nav-border: rgba(255, 255, 255, 0.08);
+    --nav-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    
+    --orb-blue: rgba(56, 182, 255, 0.12);
+    --orb-purple: rgba(120, 80, 255, 0.10);
+    --orb-green: rgba(0, 210, 150, 0.10);
+    
+    --grid-line: rgba(255, 255, 255, 0.022);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.1);
+    --scrollbar-hover: rgba(255, 255, 255, 0.2);
+
+    --gradient-brand: linear-gradient(135deg, #1B6FE8 0%, #7B3FE4 100%);
+    --gradient-accent-bar: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    
+    --hover-card-border: rgba(59, 130, 246, 0.35);
+    --modal-overlay: rgba(6, 8, 16, 0.7);
+    --modal-bg: rgba(15, 20, 32, 0.95);
+}
+
+/* ─── Light Mode ─── */
+[data-theme="light"] {
+    --bg-primary: #EEEEF2;
+    --bg-secondary: #E5E5EA;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #FAFAFA;
+    --bg-input: #F2F2F5;
+    --bg-input-hover: #E8E8EC;
+    --bg-elevated: #FFFFFF;
+    --bg-badge: rgba(26, 26, 46, 0.05);
+    
+    --border-primary: rgba(0, 0, 0, 0.08);
+    --border-secondary: rgba(0, 0, 0, 0.05);
+    --border-accent: rgba(26, 26, 46, 0.12);
+    --border-input-focus: rgba(26, 26, 46, 0.30);
+    
+    --text-primary: #1A1A2E;
+    --text-secondary: #6B7280;
+    --text-tertiary: #9CA3AF;
+    --text-accent: #1A1A2E;
+    --text-danger: #DC2626;
+    --text-heading: #111827;
+    --text-body: #4B5563;
+    --text-muted: #9CA3AF;
+    
+    --shadow-card: 0 1px 4px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    --shadow-elevated: 0 12px 40px rgba(0, 0, 0, 0.08);
+    --shadow-brand: 0 4px 12px rgba(26, 26, 46, 0.12);
+    --shadow-btn: 0 4px 12px rgba(26, 26, 46, 0.12);
+    
+    --nav-bg: rgba(255, 255, 255, 0.85);
+    --nav-border: rgba(0, 0, 0, 0.07);
+    --nav-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    
+    --orb-blue: rgba(56, 182, 255, 0.04);
+    --orb-purple: rgba(120, 80, 255, 0.03);
+    --orb-green: rgba(0, 210, 150, 0.03);
+    
+    --grid-line: rgba(0, 0, 0, 0.028);
+    --scrollbar-thumb: rgba(0, 0, 0, 0.12);
+    --scrollbar-hover: rgba(0, 0, 0, 0.20);
+
+    --gradient-brand: linear-gradient(135deg, #1A1A2E 0%, #2D2B55 100%);
+    --gradient-accent-bar: linear-gradient(90deg, transparent, rgba(0,0,0,0.04), transparent);
+    
+    --hover-card-border: rgba(0, 0, 0, 0.12);
+    --modal-overlay: rgba(0, 0, 0, 0.25);
+    --modal-bg: #FFFFFF;
+}
 
 *, *::before, *::after {
     margin: 0;
@@ -14,8 +116,9 @@ body {
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #0A0D14;
-    color: #f3f4f6;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Custom Scrollbar */
@@ -29,10 +132,16 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--scrollbar-thumb);
     border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--scrollbar-hover);
+}
+
+/* Light mode select options need dark text */
+[data-theme="light"] select option {
+    background: #FFFFFF;
+    color: #1A1A2E;
 }
