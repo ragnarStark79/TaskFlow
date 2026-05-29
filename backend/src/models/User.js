@@ -9,6 +9,7 @@ const UserSchema = new Schema({
     password:      { type: String, required: true, select: false },  // hidden by default
     avatar:        { type: String, default: '' },
     role:          { type: String, enum: ['user', 'admin'], default: 'user' },
+    theme:         { type: String, enum: ['dark', 'light'], default: 'dark' },
     refreshTokens: [{ token: String, createdAt: Date }],
     isVerified:    { type: Boolean, default: false },
     lastSeen:      { type: Date, default: Date.now },
