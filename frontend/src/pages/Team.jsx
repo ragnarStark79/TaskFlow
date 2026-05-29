@@ -9,17 +9,18 @@ import toast from "react-hot-toast";
 const S = {
   page: {
     minHeight: "100vh",
-    background: "#060810",
+    background: "var(--bg-primary)",
     fontFamily: "'DM Sans', sans-serif",
     position: "relative",
     overflow: "hidden",
     padding: "0 0 80px",
+    transition: "background-color 0.3s ease",
   },
   grid: {
     position: "fixed",
     inset: 0,
     backgroundImage:
-      "linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)",
+      "linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)",
     backgroundSize: "48px 48px",
     pointerEvents: "none",
     zIndex: 0,
@@ -38,26 +39,26 @@ const S = {
     gap: 24,
     flexWrap: "wrap",
     paddingBottom: 28,
-    borderBottom: "1px solid rgba(255,255,255,0.06)",
+    borderBottom: "1px solid var(--border-primary)",
     marginBottom: 28,
   },
   h1: {
     fontSize: 34,
     fontWeight: 700,
     lineHeight: 1.1,
-    color: "#F0F4FF",
+    color: "var(--text-primary)",
     margin: 0,
     fontFamily: "'Syne', sans-serif",
   },
   sub: {
     fontSize: 14,
-    color: "rgba(160,170,200,0.65)",
+    color: "var(--text-secondary)",
     marginTop: 8,
   },
   sectionTitle: {
     fontSize: 14,
     fontWeight: 700,
-    color: "#E2E8F0",
+    color: "var(--text-primary)",
     margin: "24px 0 12px",
   },
   gridCards: {
@@ -66,20 +67,21 @@ const S = {
     gap: 16,
   },
   card: {
-    background: "rgba(255,255,255,0.035)",
-    border: "1px solid rgba(255,255,255,0.07)",
+    background: "var(--bg-card)",
+    border: "1px solid var(--border-primary)",
     borderRadius: 18,
     padding: 18,
-    boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+    boxShadow: "var(--shadow-card)",
+    transition: "background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease",
   },
   chip: {
     fontSize: 11,
     fontWeight: 600,
     padding: "4px 8px",
     borderRadius: 999,
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    color: "rgba(200,210,230,0.75)",
+    background: "var(--bg-input)",
+    border: "1px solid var(--border-primary)",
+    color: "var(--text-body)",
   },
   requestRow: {
     display: "flex",
@@ -88,8 +90,8 @@ const S = {
     gap: 12,
     padding: "10px 12px",
     borderRadius: 12,
-    border: "1px solid rgba(255,255,255,0.06)",
-    background: "rgba(255,255,255,0.03)",
+    border: "1px solid var(--border-primary)",
+    background: "var(--bg-card)",
     marginBottom: 8,
   },
   actionBtn: {
@@ -98,21 +100,21 @@ const S = {
     gap: 6,
     padding: "6px 10px",
     borderRadius: 10,
-    border: "1px solid rgba(255,255,255,0.1)",
-    background: "rgba(255,255,255,0.04)",
-    color: "#E2E8F0",
+    border: "1px solid var(--border-primary)",
+    background: "var(--bg-input)",
+    color: "var(--text-primary)",
     fontSize: 12,
     fontWeight: 600,
     cursor: "pointer",
   },
   manageCard: {
-    background: "rgba(255,255,255,0.035)",
-    border: "1px solid rgba(255,255,255,0.07)",
+    background: "var(--bg-card)",
+    border: "1px solid var(--border-primary)",
     borderRadius: 18,
     padding: 18,
-    boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+    boxShadow: "var(--shadow-card)",
     cursor: "pointer",
-    transition: "transform 0.2s ease, border-color 0.2s ease",
+    transition: "transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
   },
 };
 
@@ -220,9 +222,9 @@ const Team = () => {
 
         <h2 style={S.sectionTitle}>Your team workspaces</h2>
         {loading ? (
-          <div style={{ color: "rgba(160,170,200,0.6)" }}>Loading...</div>
+          <div style={{ color: "var(--text-muted)" }}>Loading...</div>
         ) : teamWorkspaces.length === 0 ? (
-          <div style={{ color: "rgba(160,170,200,0.6)" }}>
+          <div style={{ color: "var(--text-muted)" }}>
             No team workspaces yet. Invite someone or approve a request to see them here.
           </div>
         ) : (
@@ -230,10 +232,10 @@ const Team = () => {
             {teamWorkspaces.map((ws) => (
               <div key={ws._id} className="team-card" style={S.card}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
-                  <h3 style={{ margin: 0, color: "#F0F4FF", fontSize: 16 }}>{ws.name}</h3>
+                  <h3 style={{ margin: 0, color: "var(--text-primary)", fontSize: 16 }}>{ws.name}</h3>
                   <span style={S.chip}>{ws.members?.length ?? 0} members</span>
                 </div>
-                <div style={{ fontSize: 12, color: "rgba(160,170,200,0.6)" }}>
+                <div style={{ fontSize: 12, color: "var(--text-muted)" }}>
                   Workspace ID: {ws._id}
                 </div>
               </div>
@@ -243,7 +245,7 @@ const Team = () => {
 
         <h2 style={S.sectionTitle}>Join requests</h2>
         {Object.values(requests).every((r) => r.length === 0) ? (
-          <div style={{ color: "rgba(160,170,200,0.6)" }}>No pending requests.</div>
+          <div style={{ color: "var(--text-muted)" }}>No pending requests.</div>
         ) : (
           Object.entries(requests).map(([workspaceId, items]) => (
             items.length > 0 && (
@@ -253,10 +255,10 @@ const Team = () => {
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                       <Users size={16} />
                       <div>
-                        <div style={{ color: "#E2E8F0", fontSize: 13 }}>
+                        <div style={{ color: "var(--text-primary)", fontSize: 13 }}>
                           {req.user?.name || "User"}
                         </div>
-                        <div style={{ color: "rgba(160,170,200,0.6)", fontSize: 12 }}>
+                        <div style={{ color: "var(--text-muted)", fontSize: 12 }}>
                           {req.user?.email || ""}
                         </div>
                       </div>
@@ -278,7 +280,7 @@ const Team = () => {
 
         <h2 style={S.sectionTitle}>Workspace management</h2>
         {manageableWorkspaces.length === 0 ? (
-          <div style={{ color: "rgba(160,170,200,0.6)" }}>
+          <div style={{ color: "var(--text-muted)" }}>
             You do not manage any workspaces yet.
           </div>
         ) : (
@@ -290,23 +292,23 @@ const Team = () => {
                 onClick={() => navigate(`/team/workspaces/${ws._id}`)}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = "translateY(-3px)";
-                  e.currentTarget.style.borderColor = "rgba(59,130,246,0.35)";
+                  e.currentTarget.style.borderColor = "var(--hover-card-border)";
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
+                  e.currentTarget.style.borderColor = "var(--border-primary)";
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
                   <div>
-                    <div style={{ color: "#F0F4FF", fontSize: 15, fontWeight: 700 }}>{ws.name}</div>
-                    <div style={{ color: "rgba(160,170,200,0.6)", fontSize: 12 }}>
+                    <div style={{ color: "var(--text-primary)", fontSize: 15, fontWeight: 700 }}>{ws.name}</div>
+                    <div style={{ color: "var(--text-muted)", fontSize: 12 }}>
                       Manage member access
                     </div>
                   </div>
                   <span style={S.chip}>{ws.members?.length ?? 0} members</span>
                 </div>
-                <div style={{ color: "rgba(160,170,200,0.6)", fontSize: 12 }}>
+                <div style={{ color: "var(--text-muted)", fontSize: 12 }}>
                   Click to manage roles and removals
                 </div>
               </div>
