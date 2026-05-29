@@ -21,22 +21,23 @@ const accent = (i) => ACCENTS[i % ACCENTS.length];
 const S = {
     page: {
         minHeight: '100vh',
-        background: '#060810',
+        background: 'var(--bg-primary)',
         fontFamily: "'DM Sans', sans-serif",
         position: 'relative',
         overflow: 'hidden',
         padding: '0 0 80px',
+        transition: 'background-color 0.3s ease',
     },
     grid: {
         position: 'fixed', inset: 0,
-        backgroundImage: `linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px)`,
+        backgroundImage: `linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px)`,
         backgroundSize: '48px 48px',
         pointerEvents: 'none', zIndex: 0,
     },
     orb: {
         position: 'fixed', top: '10%', right: '-10%',
         width: 600, height: 600, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, var(--orb-blue) 0%, transparent 70%)',
         filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
     },
     inner: {
@@ -46,14 +47,14 @@ const S = {
     backBtn: {
         display: 'inline-flex', alignItems: 'center', gap: 6,
         padding: '8px 16px', borderRadius: '10px',
-        background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-        color: 'rgba(180,190,220,0.8)', fontSize: 13, fontWeight: 600,
+        background: 'var(--bg-input)', border: '1px solid var(--border-primary)',
+        color: 'var(--text-secondary)', fontSize: 13, fontWeight: 600,
         cursor: 'pointer', marginBottom: 24, transition: 'all 0.2s ease',
     },
     header: {
         display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
         flexWrap: 'wrap', gap: 20, paddingBottom: 32,
-        borderBottom: '1px solid rgba(255,255,255,0.06)', marginBottom: 40,
+        borderBottom: '1px solid var(--border-primary)', marginBottom: 40,
     },
     eyebrow: {
         display: 'inline-flex', alignItems: 'center', gap: 7,
@@ -70,11 +71,11 @@ const S = {
         color: '#0EA5E9', textTransform: 'uppercase',
     },
     h1: {
-        fontSize: 36, fontWeight: 700, lineHeight: 1.1, color: '#F0F4FF', margin: 0,
+        fontSize: 36, fontWeight: 700, lineHeight: 1.1, color: 'var(--text-primary)', margin: 0,
         fontFamily: "'Syne', sans-serif",
     },
     subtext: {
-        fontSize: 14, color: 'rgba(160,170,200,0.65)', marginTop: 8,
+        fontSize: 14, color: 'var(--text-secondary)', marginTop: 8,
     },
     newBtn: {
         display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -88,11 +89,11 @@ const S = {
         display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20,
     },
     card: {
-        background: 'rgba(255,255,255,0.035)', border: '1px solid rgba(255,255,255,0.07)',
+        background: 'var(--bg-card)', border: '1px solid var(--border-primary)',
         borderRadius: 22, padding: '24px', cursor: 'pointer',
         backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
         display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden',
-        boxShadow: '0 4px 24px rgba(0,0,0,0.25)', height: '100%',
+        boxShadow: 'var(--shadow-card)', height: '100%',
     },
     cardAccentBar: {
         position: 'absolute', top: 0, left: 0, right: 0, height: 2, borderRadius: '22px 22px 0 0',
@@ -105,22 +106,22 @@ const S = {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
     },
     cardName: {
-        fontSize: 18, fontWeight: 700, color: '#F0F4FF', margin: '0 0 6px',
+        fontSize: 18, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 6px',
         fontFamily: "'Syne', sans-serif",
     },
     cardDesc: {
-        fontSize: 13, color: 'rgba(160,170,200,0.6)', lineHeight: 1.5,
+        fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5,
         display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
     },
     cardFooter: {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        marginTop: 'auto', paddingTop: 16, borderTop: '1px solid rgba(255,255,255,0.055)',
-        fontSize: 13, color: 'rgba(160,170,200,0.55)',
+        marginTop: 'auto', paddingTop: 16, borderTop: '1px solid var(--border-secondary)',
+        fontSize: 13, color: 'var(--text-muted)',
     },
     empty: {
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        padding: '80px 24px', borderRadius: 28, background: 'rgba(255,255,255,0.03)',
-        border: '1px dashed rgba(255,255,255,0.08)', textAlign: 'center',
+        padding: '80px 24px', borderRadius: 28, background: 'var(--bg-card)',
+        border: '1px dashed var(--border-primary)', textAlign: 'center',
     },
     emptyIcon: {
         width: 64, height: 64, borderRadius: 20, background: 'rgba(14,165,233,0.08)',
@@ -128,18 +129,18 @@ const S = {
         marginBottom: 20, color: '#0EA5E9',
     },
     emptyTitle: {
-        fontSize: 20, fontWeight: 700, color: '#F0F4FF', margin: '0 0 8px',
+        fontSize: 20, fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 8px',
         fontFamily: "'Syne', sans-serif",
     },
     emptyText: {
-        fontSize: 14, color: 'rgba(160,170,200,0.55)', margin: '0 0 24px',
+        fontSize: 14, color: 'var(--text-muted)', margin: '0 0 24px',
     },
     skeletonGrid: {
         display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 20,
     },
     skeleton: {
-        height: 180, borderRadius: 22, background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.06)', overflow: 'hidden', position: 'relative',
+        height: 180, borderRadius: 22, background: 'var(--bg-input)',
+        border: '1px solid var(--border-primary)', overflow: 'hidden', position: 'relative',
     },
     skeletonShimmer: {
         position: 'absolute', inset: 0,
@@ -161,10 +162,10 @@ const ProjectCard = ({ project, index, onClick }) => {
     const ac = accent(index);
 
     const onEnter = () => {
-        gsap.to(cardRef.current, { y: -5, background: 'rgba(255,255,255,0.055)', borderColor: 'rgba(255,255,255,0.12)', boxShadow: `0 12px 40px ${ac.glow}`, duration: 0.25 });
+        gsap.to(cardRef.current, { y: -5, background: 'var(--bg-card-hover)', borderColor: 'var(--hover-card-border)', boxShadow: `0 12px 40px ${ac.glow}`, duration: 0.25 });
     };
     const onLeave = () => {
-        gsap.to(cardRef.current, { y: 0, background: 'rgba(255,255,255,0.035)', borderColor: 'rgba(255,255,255,0.07)', boxShadow: '0 4px 24px rgba(0,0,0,0.25)', duration: 0.25 });
+        gsap.to(cardRef.current, { y: 0, background: 'var(--bg-card)', borderColor: 'var(--border-primary)', boxShadow: 'var(--shadow-card)', duration: 0.25 });
     };
     const onDown = () => gsap.to(cardRef.current, { scale: 0.985, duration: 0.1 });
     const onUp = () => gsap.to(cardRef.current, { scale: 1, duration: 0.15 });
@@ -247,8 +248,8 @@ const WorkspaceView = () => {
                 <button 
                     style={S.backBtn} 
                     onClick={() => navigate('/dashboard')}
-                    onMouseEnter={(e) => gsap.to(e.target, { background: 'rgba(255,255,255,0.08)', duration: 0.2 })}
-                    onMouseLeave={(e) => gsap.to(e.target, { background: 'rgba(255,255,255,0.04)', duration: 0.2 })}
+                    onMouseEnter={(e) => gsap.to(e.target, { background: 'var(--bg-input-hover)', duration: 0.2 })}
+                    onMouseLeave={(e) => gsap.to(e.target, { background: 'var(--bg-input)', duration: 0.2 })}
                 >
                     <ArrowLeft size={14} /> Back to Workspaces
                 </button>
