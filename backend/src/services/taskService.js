@@ -52,7 +52,12 @@ const getTasksByProject = async (projectId) => {
 };
 
 const getMyTasks = async (userId) => {
-    return await Task.find({ assignees: userId })
+    return await Task.find({
+        $or: [
+            { assignees: userId },
+            { createdBy: userId }
+        ]
+    })
         .populate({
             path: 'project',
             select: 'name color workspace origin',
